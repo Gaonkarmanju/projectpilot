@@ -1,0 +1,95 @@
+// ProjectPilot database schema
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  college      String?
+  year         Int?
+  skillLevel   SkillLevel    @default(BEGINNER) @map("skill_level")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  projects     UserProject[]
+
+  @@map("users")
+}
+
+model Idea {
+  id          String        @id @default(cuid())
+  title       String        @unique
+  description String
+  domain      String        // e.g. "Web", "AI/ML", "IoT"
+  difficulty  SkillLevel
+  techStack   String[]      @map("tech_stack")
+  features    String[]
+  estWeeks    Int           @map("est_weeks")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  projects    UserProject[]
+
+  @@index([domain])
+  @@index([difficulty])
+  @@map("ideas")
+}
+
+model UserProject {
+  id         String        @id @default(cuid())
+  userId     String        @map("user_id")
+  ideaId     String        @map("idea_id")
+  status     ProjectStatus @default(PLANNING)
+  deadline   DateTime?
+  startedAt  DateTime      @default(now()) @map("started_at")
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idea       Idea          @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  roadmap    Roadmap?
+  milestones Milestone[]
+
+  @@unique([userId, ideaId]) // a student saves each idea once
+  @@index([userId])
+  @@map("user_projects")
+}
+
+model Roadmap {
+  id            String      @id @default(cuid())
+  userProjectId String      @unique @map("user_project_id")
+  content       Json        // { summary, techStack[], modules[], weeks[] }
+  source        String      @default("template") // "ai" or "template"
+  generatedAt   DateTime    @default(now()) @map("generated_at")
+  userProject   UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
+
+  @@map("roadmaps")
+}
+
+model Milestone {
+  id            String      @id @default(cuid())
+  userProjectId String      @map("user_project_id")
+  title         String
+  weekNo        Int         @map("week_no")
+  isDone        Boolean     @default(false) @map("is_done")
+  doneAt        DateTime?   @map("done_at")
+  userProject   UserProject @relation(fields: [userProjectId], references: [id], onDelete: Cascade)
+
+  @@index([userProjectId])
+  @@map("milestones")
+}

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+/* Design tokens: ink-blue text on a cool paper background, with a runway-signal yellow
+   reserved for the route and the main action. */
+:root {
+  --ink: #1b2540;
+  --ink-soft: #3c4763;
+  --muted: #646f87;
+  --paper: #f3f6fa;
+  --surface: #ffffff;
+  --line: #d5dce6;
+  --signal: #f2b705;
+  --signal-deep: #8a6700;
+  --clear: #1e7f6e;
+  --danger: #b3261e;
+
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0 0 0.5em; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.35rem; font-weight: 700; margin-top: 2rem; }
+h3 { font-size: 1.1rem; font-weight: 500; }
+p { margin: 0 0 1em; }
+a { color: var(--ink); }
+:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+.page-pad { padding-top: 2.5rem; }
+.detail { max-width: 720px; }
+.lead { font-size: 1.125rem; color: var(--ink-soft); max-width: 62ch; }
+.muted { color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+.back { display: inline-block; margin-bottom: 1.25rem; color: var(--muted); }
+
+/* ---------- Navigation ---------- */
+.nav { background: var(--ink); color: #fff; }
+.nav-inner { max-width: 1080px; margin: 0 auto; padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+.brand svg { color: var(--signal); }
+.nav-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.nav-link { color: #c9d1e3; text-decoration: none; }
+.nav-link:hover, .nav-link.active { color: #fff; text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--signal); }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-block; border: 0; border-radius: var(--radius-sm); padding: 0.65rem 1.1rem; font: 600 0.95rem var(--font-body); cursor: pointer; text-decoration: none; }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+.btn-primary { background: var(--signal); color: var(--ink); }
+.btn-primary:hover:not(:disabled) { background: #ffc83a; }
+.btn-quiet { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.btn-danger { background: transparent; color: var(--danger); box-shadow: inset 0 0 0 1.5px var(--danger); }
+
+/* ---------- Hero ---------- */
+.hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; align-items: center; padding: 4.5rem 0 3rem; }
+.hero h1 { font-size: clamp(2.3rem, 5.5vw, 3.6rem); max-width: 14ch; }
+.hero-plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.5rem 1.75rem; }
+.plan-caption { color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- The route (weekly plan) ---------- */
+.route { list-style: none; margin: 0; padding: 0; position: relative; }
+.waypoint { position: relative; display: grid; grid-template-columns: 2.25rem 1fr; gap: 1rem; padding-bottom: 1.75rem; }
+.waypoint:last-child { padding-bottom: 0; }
+/* dashed runway line connecting waypoints */
+.waypoint:not(:last-child)::before {
+  content: ''; position: absolute; left: calc(1.125rem - 1px); top: 2.25rem; bottom: 0; width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--line) 0 6px, transparent 6px 12px);
+}
+.waypoint.is-done:not(:last-child)::before { background: var(--clear); }
+.waypoint-dot {
+  width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center;
+  font: 700 0.95rem var(--font-display); background: var(--surface); border: 2px solid var(--line); color: var(--muted);
+}
+.waypoint.is-started .waypoint-dot { border-color: var(--signal); color: var(--signal-deep); background: #fff7dc; }
+.waypoint.is-done .waypoint-dot { background: var(--clear); border-color: var(--clear); color: #fff; }
+.waypoint-body h3 { margin-top: 0.4rem; }
+.route-preview .waypoint { padding-bottom: 1.1rem; }
+
+.tasks { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.task { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.35rem 0; cursor: pointer; }
+.task input { margin-top: 0.3rem; width: 1.05rem; height: 1.05rem; accent-color: var(--clear); }
+.task.done span { color: var(--muted); text-decoration: line-through; }
+
+/* ---------- Ideas ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0 2rem; }
+.filters .grow { flex: 1 1 260px; }
+.result-count { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.75rem; }
+.load-more { display: flex; justify-content: center; margin-top: 1.5rem; }
+.idea-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.idea { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem; text-decoration: none; color: var(--ink); }
+.idea:hover { border-color: var(--ink); }
+.idea p { color: var(--ink-soft); font-size: 0.95rem; }
+.idea .stack { color: var(--muted); font-size: 0.875rem; margin: 0; }
+.idea-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.6rem; }
+.level { font-weight: 600; }
+.level-beginner { color: var(--clear); }
+.level-intermediate { color: var(--signal-deep); }
+.level-advanced { color: var(--danger); }
+.plain-list { padding-left: 1.2rem; }
+
+/* ---------- Forms ---------- */
+.auth { max-width: 440px; margin: 3rem auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 2rem; }
+.form { display: grid; gap: 1rem; margin-bottom: 1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+label { display: grid; gap: 0.3rem; font-weight: 500; font-size: 0.9rem; }
+label small { color: var(--muted); font-weight: 400; }
+input, select { font: inherit; font-weight: 400; padding: 0.6rem 0.7rem; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); min-height: 2.75rem; }
+input:focus, select:focus { border-color: var(--ink); outline: none; }
+.error { color: var(--danger); font-weight: 500; }
+.empty { padding: 2rem; border: 1.5px dashed var(--line); border-radius: var(--radius-lg); }
+
+/* ---------- Projects ---------- */
+.start-box { margin-top: 2.5rem; padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--signal); border-radius: var(--radius-sm); }
+.start-box h2 { margin-top: 0; }
+.project-list { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+.project-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1.1rem 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); text-decoration: none; color: var(--ink); }
+.project-row:hover { border-color: var(--ink); }
+.project-row h3, .project-row p { margin: 0; }
+.progress { min-width: 200px; display: grid; gap: 0.3rem; }
+.progress.big { margin: 1.25rem 0 1.5rem; }
+.progress-bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress-bar span { display: block; height: 100%; background: var(--clear); transition: width 0.3s ease; }
+.progress small { color: var(--muted); }
+.modules { display: grid; gap: 0.75rem; }
+.modules dt { font-weight: 600; }
+.modules dd { margin: 0; color: var(--ink-soft); }
+.danger-zone { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+
+/* ---------- Responsive and motion ---------- */
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; padding-top: 2.5rem; gap: 2rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .auth { padding: 1.5rem; margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
